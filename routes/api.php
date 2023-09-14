@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\ProductCriterionController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
@@ -27,6 +28,9 @@ Route::prefix('v1')->group(function(){
     Route::apiResource("/products", ProductController::class)->middleware('auth:sanctum');
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/products/name/{name}', [ProductCriterionController::class, 'searchProduct']);
+    Route::get('/products/criterion/{name}/{price}/{type}/{orderBy}', [ProductCriterionController::class, 'ProductsByCriterion']);
+
 });
 
 
