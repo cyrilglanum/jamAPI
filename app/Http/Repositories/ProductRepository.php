@@ -33,6 +33,14 @@ class ProductRepository implements ProductInterface
             $priceMax = $price[1];
         }
 
+        $tabType = [];
+
+        if (!empty($type)) {
+            foreach ($type as $key => $item) {
+                $tabType[] = $item;
+            }
+        }
+
         $query = Product::query()->with('categories');
 
         if (isset($name) && (int)$name && !is_null($name)) {
@@ -44,21 +52,27 @@ class ProductRepository implements ProductInterface
         if (isset($priceMax) && $priceMax && !is_null($priceMax)) {
             $query = $query->where('price', '<', $priceMax);
         }
-        //TODO gérer le souci vu que le type n'est pas inhérent au model product
-//        if (isset($type) && $type && !is_null($type)) {
-//            $query = $query->where('type', $type);
-//        }
         if (isset($orderBy) && (int)$orderBy && !is_null($orderBy)) {
             $query = $query->where('name', $orderBy);
         }
 
+        $finalTab = [];
+
+        //Récupération des produits s'ils sont du type coché.
+        if (isset($tabType) && $tabType && !empty($tabType)) {
+            foreach ($query->get() as $product) {
+                foreach ($product->categories as $category) {
+                    if (in_array($category->id, $tabType)) {
+                        $finalTab[] = $product;
+                    }
+                }
+            }
+        }
+
+        if(!empty($finalTab)){
+            return new LengthAwarePaginator(collect($finalTab), 100, 10);
+        }
+
         return $query->paginate(10);
-
-//        return Product::query()
-//            ->with('categories')
-//            ->where('name', $name)
-//            ->where('price', '>', $priceMin)
-//            ->where('price', '<', $priceMax)->get();
-
     }
 }
