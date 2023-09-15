@@ -1,6 +1,11 @@
 <?php
 
-use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\AdminCartsController;
+use App\Http\Controllers\API\AdminCategoriesController;
+use App\Http\Controllers\API\AdminController;
+use App\Http\Controllers\API\AdminOrdersController;
+use App\Http\Controllers\API\AdminProductsController;
+use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\ProductCriterionController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\AuthController;
@@ -24,12 +29,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('v1')->group(function(){
-    Route::apiResource("/users", UserController::class)->middleware('auth:sanctum');
-    Route::apiResource("/products", ProductController::class)->middleware('auth:sanctum');
+    //Admin routes
+    Route::get('/admin', [AdminController::class, 'index'])->middleware('auth:sanctum');
+    Route::apiResource("/admin/users", UserController::class)->middleware('auth:sanctum');
+    Route::apiResource('/admin/products', AdminProductsController::class)->middleware('auth:sanctum');
+    Route::apiResource('/admin/categories', AdminCategoriesController::class)->middleware('auth:sanctum');
+    Route::apiResource('/admin/carts', AdminCartsController::class)->middleware('auth:sanctum');
+    Route::apiResource('/admin/orders', AdminOrdersController::class)->middleware('auth:sanctum');
+
+//API routes
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/products/name/{name}', [ProductCriterionController::class, 'searchProduct']);
     Route::get('/products/criterion/{name}/{price}/{type}/{orderBy}', [ProductCriterionController::class, 'ProductsByCriterion']);
+    Route::get('/cart/{user_id}', [CartController::class, 'show']);
 
 });
 

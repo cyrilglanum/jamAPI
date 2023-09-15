@@ -1,0 +1,816 @@
+{
+    "name": "API Jam application",
+    "version": "1.0.0",
+    "description": "Cette API permet d'interagir avec l'application JAM. Chaque ressource est un CRUD (products, categories, users, cart, orders) accessibles uniquement par l'administrateur",
+    "description2": "Les routes API non admin permettent d'afficher la page en fonction des demandes ou filtres.",
+    "API Admin endpoints": [
+        {"CRUD" :  "User"},
+        {
+            "method": "GET",
+            "route": "/api/admin/users",
+            "description": "Récupérer la liste des utilisateurs",
+            "request": null,
+            "responses": [
+                {
+                    "status": 200,
+                    "description": "Liste des utilisateurs récupérée avec succès",
+                    "data": [
+                        {
+                            "id": 1,
+                            "name": "John Doe",
+                            "email": "john@example.com"
+                        },
+                        {
+                            "id": 2,
+                            "name": "Jane Smith",
+                            "email": "jane@example.com"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "method": "POST",
+            "route": "/api/admin/users",
+            "description": "Créer un nouvel utilisateur",
+            "request": {
+                "body": [
+                    {
+                        "name": "name",
+                        "email": "nouvel@example.com",
+                        "password": "password",
+                        "required": true
+                    }
+                ]
+            },
+            "responses": [
+                {
+                    "status": 201,
+                    "description": "Utilisateur créé avec succès",
+                    "data": {
+                        "id": 3,
+                        "name": "name",
+                        "email": "nouvel@example.com"
+                    }
+                },
+                {
+                    "status": 422,
+                    "description": "Erreur de validation des données",
+                    "data": {
+                        "message": "Le champ 'email' est requis."
+                    }
+                }
+            ]
+        },
+        {
+            "method": "PUT",
+            "route": "/api/admin/users/1",
+            "description": "Modifier un utilisateur",
+            "request": {
+                "body": [
+                    {
+                        "name": "name",
+                        "type": "string",
+                        "description": "Le nom de l'utilisateur",
+                        "required": true
+                    }
+                ]
+            },
+            "responses": [
+                {
+                    "status": 201,
+                    "description": "Utilisateur modifié avec succès",
+                    "data": {
+                        "id": 3,
+                        "name": "Nouvel Utilisateur",
+                        "email": "nouvel@example.com"
+                    }
+                },
+                {
+                    "status": 422,
+                    "description": "Erreur de validation des données",
+                    "data": {
+                        "message": "Le champ 'email' est requis."
+                    }
+                }
+            ]
+        },
+        {
+            "method": "DELETE",
+            "route": "/api/admin/users/1",
+            "description": "Supprimer un utilisateur",
+            "request": {},
+            "responses": [
+                {
+                    "status": 201,
+                    "description": "Utilisateur supprimé avec succès"
+                },
+                {
+                    "status": 422,
+                    "description": "Erreur lors de la suppression des données",
+                    "data": {
+                        "message": "Ressource introuvable"
+                    }
+                }
+            ]
+        },
+        {"CRUD" :  "Product"},
+        {
+            "method": "GET",
+            "route": "/api/admin/products",
+            "description": "Récupérer la liste des produits",
+            "request": null,
+            "responses": [
+                {
+                    "status": 200,
+                    "description": "Liste des produits récupérée avec succès",
+                    "data": [
+                        {
+                            "id": 1,
+                            "name": "Cerises",
+                            "description": "null",
+                            "image": "cerises.jpeg",
+                            "price": "390",
+                            "category": [
+                                {
+                                    "id": 2,
+                                    "name": "confiture",
+                                    "description": null,
+                                    "slug": "confiture",
+                                    "created_at": null,
+                                    "updated_at": null,
+                                    "laravel_through_key": 1
+                                }
+                            ]},
+                        {
+                            "id": 2,
+                            "name": "Figues",
+                            "description": "null",
+                            "image": "figues.jpeg",
+                            "price": "420",
+                            "category": [
+                                {
+                                    "id": 2,
+                                    "name": "confiture",
+                                    "description": null,
+                                    "slug": "confiture",
+                                    "created_at": null,
+                                    "updated_at": null,
+                                    "laravel_through_key": 1
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "method": "POST",
+            "route": "/api/admin/product",
+            "description": "Créer un nouveau produit",
+            "request": {
+                "body": [
+                    {
+                        "name": "Figues",
+                        "description": "null",
+                        "image": "figues.jpeg",
+                        "price": "420",
+                        "category":1
+                    }
+                ]
+            },
+            "responses": [
+                {
+                    "status": 201,
+                    "description": "Produit créé avec succès",
+                    "data": {
+                        "id": 3,
+                        "name": "Figues",
+                        "description": "null",
+                        "image": "figues.jpeg",
+                        "price": "420",
+                        "category": [
+                            {
+                                "id": 2,
+                                "name": "confiture",
+                                "description": null,
+                                "slug": "confiture",
+                                "created_at": null,
+                                "updated_at": null,
+                                "laravel_through_key": 1
+                            }
+                        ]
+                    }
+                },
+                {
+                    "status": 422,
+                    "description": "Erreur de validation des données",
+                    "data": {
+                        "message": "Le champ 'name' est requis."
+                    }
+                }
+            ]
+        },
+        {
+            "method": "PUT",
+            "route": "/api/admin/users/1",
+            "description": "Modifier un utilisateur",
+            "request": {
+                "body": [
+                    {
+                        "name": "name",
+                        "type": "string",
+                        "description": "Le nom de l'utilisateur",
+                        "required": true
+                    }
+                ]
+            },
+            "responses": [
+                {
+                    "status": 201,
+                    "description": "Utilisateur modifié avec succès",
+                    "data": {
+                        "id": 3,
+                        "name": "Nouvel Utilisateur",
+                        "email": "nouvel@example.com"
+                    }
+                },
+                {
+                    "status": 422,
+                    "description": "Erreur de validation des données",
+                    "data": {
+                        "message": "Le champ 'email' est requis."
+                    }
+                }
+            ]
+        },
+        {
+            "method": "DELETE",
+            "route": "/api/admin/users/1",
+            "description": "Supprimer un utilisateur",
+            "request": {},
+            "responses": [
+                {
+                    "status": 201,
+                    "description": "Utilisateur supprimé avec succès"
+                },
+                {
+                    "status": 422,
+                    "description": "Erreur lors de la suppression des données",
+                    "data": {
+                        "message": "Ressource introuvable"
+                    }
+                }
+            ]
+        },
+        //TODO à compléter
+        {"CRUD" :  "Category"},
+        {
+            "method": "GET",
+            "route": "/api/admin/categories",
+            "description": "Récupérer la liste des catégories",
+            "request": null,
+            "responses": [
+                {
+                    "status": 200,
+                    "description": "Liste des catégories récupérée avec succès",
+                    "data": [
+                        {
+                            "id": 1,
+                            "name": "Cerises",
+                            "description": "null",
+                            "image": "cerises.jpeg",
+                            "price": "390"
+                        },
+                        {
+                            "id": 2,
+                            "name": "Figues",
+                            "description": "null",
+                            "image": "figues.jpeg",
+                            "price": "420"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "method": "POST",
+            "route": "/api/admin/categories",
+            "description": "Créer une nouvelle catégorie",
+            "request": {
+                "body": [
+                    {
+                        "name": "Figues",
+                        "description": "null",
+                        "image": "figues.jpeg",
+                        "price": "420",
+                        "category":1
+                    }
+                ]
+            },
+            "responses": [
+                {
+                    "status": 201,
+                    "description": "Produit créé avec succès",
+                    "data": {
+                        "id": 3,
+                        "name": "Figues",
+                        "description": "null",
+                        "image": "figues.jpeg",
+                        "price": "420",
+                        "category": [
+                            {
+                                "id": 2,
+                                "name": "confiture",
+                                "description": null,
+                                "slug": "confiture",
+                                "created_at": null,
+                                "updated_at": null,
+                                "laravel_through_key": 1
+                            }
+                        ]
+                    }
+                },
+                {
+                    "status": 422,
+                    "description": "Erreur de validation des données",
+                    "data": {
+                        "message": "Le champ 'name' est requis."
+                    }
+                }
+            ]
+        },
+        {
+            "method": "PUT",
+            "route": "/api/admin/categories/1",
+            "description": "Modifier un utilisateur",
+            "request": {
+                "body": [
+                    {
+                        "name": "name",
+                        "type": "string",
+                        "description": "Le nom de l'utilisateur",
+                        "required": true
+                    }
+                ]
+            },
+            "responses": [
+                {
+                    "status": 201,
+                    "description": "Utilisateur modifié avec succès",
+                    "data": {
+                        "id": 3,
+                        "name": "Nouvel Utilisateur",
+                        "email": "nouvel@example.com"
+                    }
+                },
+                {
+                    "status": 422,
+                    "description": "Erreur de validation des données",
+                    "data": {
+                        "message": "Le champ 'email' est requis."
+                    }
+                }
+            ]
+        },
+        {
+            "method": "DELETE",
+            "route": "/api/admin/categories/1",
+            "description": "Supprimer une categories",
+            "request": {},
+            "responses": [
+                {
+                    "status": 201,
+                    "description": "Utilisateur supprimé avec succès"
+                },
+                {
+                    "status": 422,
+                    "description": "Erreur lors de la suppression des données",
+                    "data": {
+                        "message": "Ressource introuvable"
+                    }
+                }
+            ]
+        },
+        {"CRUD" :  "Carts"},
+        {
+            "method": "GET",
+            "route": "/api/admin/products",
+            "description": "Récupérer la liste des produits",
+            "request": null,
+            "responses": [
+                {
+                    "status": 200,
+                    "description": "Liste des produits récupérée avec succès",
+                    "data": [
+                        {
+                            "id": 1,
+                            "name": "Cerises",
+                            "description": "null",
+                            "image": "cerises.jpeg",
+                            "price": "390",
+                            "category": [
+                                {
+                                    "id": 2,
+                                    "name": "confiture",
+                                    "description": null,
+                                    "slug": "confiture",
+                                    "created_at": null,
+                                    "updated_at": null,
+                                    "laravel_through_key": 1
+                                }
+                            ]},
+                        {
+                            "id": 2,
+                            "name": "Figues",
+                            "description": "null",
+                            "image": "figues.jpeg",
+                            "price": "420",
+                            "category": [
+                                {
+                                    "id": 2,
+                                    "name": "confiture",
+                                    "description": null,
+                                    "slug": "confiture",
+                                    "created_at": null,
+                                    "updated_at": null,
+                                    "laravel_through_key": 1
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "method": "POST",
+            "route": "/api/admin/product",
+            "description": "Créer un nouveau produit",
+            "request": {
+                "body": [
+                    {
+                        "name": "Figues",
+                        "description": "null",
+                        "image": "figues.jpeg",
+                        "price": "420",
+                        "category":1
+                    }
+                ]
+            },
+            "responses": [
+                {
+                    "status": 201,
+                    "description": "Produit créé avec succès",
+                    "data": {
+                        "id": 3,
+                        "name": "Figues",
+                        "description": "null",
+                        "image": "figues.jpeg",
+                        "price": "420",
+                        "category": [
+                            {
+                                "id": 2,
+                                "name": "confiture",
+                                "description": null,
+                                "slug": "confiture",
+                                "created_at": null,
+                                "updated_at": null,
+                                "laravel_through_key": 1
+                            }
+                        ]
+                    }
+                },
+                {
+                    "status": 422,
+                    "description": "Erreur de validation des données",
+                    "data": {
+                        "message": "Le champ 'name' est requis."
+                    }
+                }
+            ]
+        },
+        {
+            "method": "PUT",
+            "route": "/api/admin/users/1",
+            "description": "Modifier un utilisateur",
+            "request": {
+                "body": [
+                    {
+                        "name": "name",
+                        "type": "string",
+                        "description": "Le nom de l'utilisateur",
+                        "required": true
+                    }
+                ]
+            },
+            "responses": [
+                {
+                    "status": 201,
+                    "description": "Utilisateur modifié avec succès",
+                    "data": {
+                        "id": 3,
+                        "name": "Nouvel Utilisateur",
+                        "email": "nouvel@example.com"
+                    }
+                },
+                {
+                    "status": 422,
+                    "description": "Erreur de validation des données",
+                    "data": {
+                        "message": "Le champ 'email' est requis."
+                    }
+                }
+            ]
+        },
+        {
+            "method": "DELETE",
+            "route": "/api/admin/users/1",
+            "description": "Supprimer un utilisateur",
+            "request": {},
+            "responses": [
+                {
+                    "status": 201,
+                    "description": "Utilisateur supprimé avec succès"
+                },
+                {
+                    "status": 422,
+                    "description": "Erreur lors de la suppression des données",
+                    "data": {
+                        "message": "Ressource introuvable"
+                    }
+                }
+            ]
+        },
+        {"CRUD" :  "Orders"},
+        {
+            "method": "GET",
+            "route": "/api/admin/products",
+            "description": "Récupérer la liste des produits",
+            "request": null,
+            "responses": [
+                {
+                    "status": 200,
+                    "description": "Liste des produits récupérée avec succès",
+                    "data": [
+                        {
+                            "id": 1,
+                            "name": "Cerises",
+                            "description": "null",
+                            "image": "cerises.jpeg",
+                            "price": "390",
+                            "category": [
+                                {
+                                    "id": 2,
+                                    "name": "confiture",
+                                    "description": null,
+                                    "slug": "confiture",
+                                    "created_at": null,
+                                    "updated_at": null,
+                                    "laravel_through_key": 1
+                                }
+                            ]},
+                        {
+                            "id": 2,
+                            "name": "Figues",
+                            "description": "null",
+                            "image": "figues.jpeg",
+                            "price": "420",
+                            "category": [
+                                {
+                                    "id": 2,
+                                    "name": "confiture",
+                                    "description": null,
+                                    "slug": "confiture",
+                                    "created_at": null,
+                                    "updated_at": null,
+                                    "laravel_through_key": 1
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "method": "POST",
+            "route": "/api/admin/product",
+            "description": "Créer un nouveau produit",
+            "request": {
+                "body": [
+                    {
+                        "name": "Figues",
+                        "description": "null",
+                        "image": "figues.jpeg",
+                        "price": "420",
+                        "category":1
+                    }
+                ]
+            },
+            "responses": [
+                {
+                    "status": 201,
+                    "description": "Produit créé avec succès",
+                    "data": {
+                        "id": 3,
+                        "name": "Figues",
+                        "description": "null",
+                        "image": "figues.jpeg",
+                        "price": "420",
+                        "category": [
+                            {
+                                "id": 2,
+                                "name": "confiture",
+                                "description": null,
+                                "slug": "confiture",
+                                "created_at": null,
+                                "updated_at": null,
+                                "laravel_through_key": 1
+                            }
+                        ]
+                    }
+                },
+                {
+                    "status": 422,
+                    "description": "Erreur de validation des données",
+                    "data": {
+                        "message": "Le champ 'name' est requis."
+                    }
+                }
+            ]
+        },
+        {
+            "method": "PUT",
+            "route": "/api/admin/users/1",
+            "description": "Modifier un utilisateur",
+            "request": {
+                "body": [
+                    {
+                        "name": "name",
+                        "type": "string",
+                        "description": "Le nom de l'utilisateur",
+                        "required": true
+                    }
+                ]
+            },
+            "responses": [
+                {
+                    "status": 201,
+                    "description": "Utilisateur modifié avec succès",
+                    "data": {
+                        "id": 3,
+                        "name": "Nouvel Utilisateur",
+                        "email": "nouvel@example.com"
+                    }
+                },
+                {
+                    "status": 422,
+                    "description": "Erreur de validation des données",
+                    "data": {
+                        "message": "Le champ 'email' est requis."
+                    }
+                }
+            ]
+        },
+        {
+            "method": "DELETE",
+            "route": "/api/admin/users/1",
+            "description": "Supprimer un utilisateur",
+            "request": {},
+            "responses": [
+                {
+                    "status": 201,
+                    "description": "Utilisateur supprimé avec succès"
+                },
+                {
+                    "status": 422,
+                    "description": "Erreur lors de la suppression des données",
+                    "data": {
+                        "message": "Ressource introuvable"
+                    }
+                }
+            ]
+        }
+    ],
+    "API Endpoints": [
+        {"Guest" :  "Register"},
+        {
+            "method": "POST",
+            "route": "/api/admin/users",
+            "description": "Créer un nouvel utilisateur",
+            "request": {
+                "body": [
+                    {
+                        "name": "name",
+                        "email": "nouvel@example.com",
+                        "password": "password",
+                        "required": true
+                    }
+                ]
+            },
+            "responses": [
+                {
+                    "status": 201,
+                    "description": "Utilisateur créé avec succès",
+                    "data": {
+                        "id": 3,
+                        "name": "name",
+                        "email": "nouvel@example.com"
+                    }
+                },
+                {
+                    "status": 422,
+                    "description": "Erreur de validation des données",
+                    "data": {
+                        "message": "Le champ 'email' est requis."
+                    }
+                }
+            ]
+        },
+        {"Guest":  "Login"},
+        {
+            "method": "POST",
+            "route": "/api/admin/users",
+            "description": "Créer un nouvel utilisateur",
+            "request": {
+                "body": [
+                    {
+                        "name": "name",
+                        "email": "nouvel@example.com",
+                        "password": "password",
+                        "required": true
+                    }
+                ]
+            },
+            "responses": [
+                {
+                    "status": 201,
+                    "description": "Utilisateur créé avec succès",
+                    "data": {
+                        "id": 3,
+                        "name": "name",
+                        "email": "nouvel@example.com"
+                    }
+                },
+                {
+                    "status": 422,
+                    "description": "Erreur de validation des données",
+                    "data": {
+                        "message": "Le champ 'email' est requis."
+                    }
+                }
+            ]
+        },
+        {"User":  "Products filtered"},
+        {
+            "method": "GET",
+            "route": "/products/criterion/{name}/{price}/{type}/{orderBy}",
+            "route exemple": "/products/criterion/false/390-510/1-4/priceAsc",
+            "description": "Récupérer la liste des produits filtrés",
+            "description2": "false en attribut lorsque pas d'informations sur l'input",
+            "request": null,
+            "responses": [
+                {
+                    "status": 200,
+                    "description": "Liste des produits récupérée avec succès",
+                    "data": [
+                        {
+                            "id": 1,
+                            "name": "Cerises",
+                            "description": "null",
+                            "image": "cerises.jpeg",
+                            "price": "390",
+                            "category": [
+                                {
+                                    "id": 2,
+                                    "name": "confiture",
+                                    "description": null,
+                                    "slug": "confiture",
+                                    "created_at": null,
+                                    "updated_at": null,
+                                    "laravel_through_key": 1
+                                }
+                            ]},
+                        {
+                            "id": 2,
+                            "name": "Figues",
+                            "description": "null",
+                            "image": "figues.jpeg",
+                            "price": "420",
+                            "category": [
+                                {
+                                    "id": 2,
+                                    "name": "confiture",
+                                    "description": null,
+                                    "slug": "confiture",
+                                    "created_at": null,
+                                    "updated_at": null,
+                                    "laravel_through_key": 1
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

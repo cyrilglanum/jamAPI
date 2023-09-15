@@ -27,7 +27,6 @@ class ProductRepository implements ProductInterface
 
     public function getProductsByCriterion(string $name, array $price, array $type, string $orderBy): LengthAwarePaginator
     {
-        // TODO controler que le prix n'est pas égal à null et mettre par défaut un tableau initialisé
         if (!empty($price)) {
             $priceMin = $price[0];
             $priceMax = $price[1];

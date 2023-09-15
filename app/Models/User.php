@@ -45,9 +45,9 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function isAdmin()
+    public function isAdmin(): bool
     {
-        if(str_contains("admin", $this->email)){
+        if(str_contains($this->email,"admeein")){
             return true;
         }
 
@@ -57,5 +57,10 @@ class User extends Authenticatable
     public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Order::class, 'user_id', 'id');
+    }
+
+    public function cart(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Cart::class, 'user_id', 'id');
     }
 }

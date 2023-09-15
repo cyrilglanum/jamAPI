@@ -3,60 +3,56 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserStoreRequest;
-use App\Http\Resources\UserResource;
-use App\Models\User;
+use App\Http\Resources\ProductResource;
+use App\Models\Product;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\Routing\Route;
 
-class UserController extends Controller
+class AdminProductsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse|AnonymousResourceCollection
     {
         if($this->isNotAdmin()){
             return response()->json([
                 'message' => 'Page Not Found. If error persists, contact info@website.com'], 404);
         }
 
-        $users = User::query()->with('orders')->paginate(10);
+        $products = Product::query()->with('categories')->paginate(10);
 
-        return UserResource::collection($users);
+        return ProductResource::collection($products);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserStoreRequest $request)
+    public function store(Request $request)
     {
-        if($this->isNotAdmin()){
-            return response()->json([
-                'message' => 'Page Not Found. If error persists, contact info@website.com'], 404);
-        }
-
-        return null;
+        //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(Product $product): JsonResponse|ProductResource
     {
         if($this->isNotAdmin()){
             return response()->json([
                 'message' => 'Page Not Found. If error persists, contact info@website.com'], 404);
         }
 
-        return new UserResource($user);
+        return new ProductResource($product);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserStoreRequest $request, User $user)
+    public function update(Request $request, Product $product): JsonResponse|string
     {
         if($this->isNotAdmin()){
             return response()->json([
@@ -66,17 +62,19 @@ class UserController extends Controller
         try {
             $this->validate($request, [
                 'name' => 'required|max:100',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|min:4'
+                'description' => 'nullable',
+                'image' => 'nullable',
+                'price' => 'required|int'
             ]);
 
-            $user->update([
+            $product->update([
                 'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password)
+                'description' => $request->description,
+                'image' => $request->image,
+                'price' => $request->price
             ]);
 
-            return response()->json($user->name ." have been updated");
+            return response()->json($product->name ." have been updated");
 
         } catch (\Exception $e) {
 
@@ -87,14 +85,14 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(Product $product)
     {
         if($this->isNotAdmin()){
             return response()->json([
                 'message' => 'Page Not Found. If error persists, contact info@website.com'], 404);
         }
 
-        $user->delete();
+        $product->delete();
 
         return response()->json();
     }
