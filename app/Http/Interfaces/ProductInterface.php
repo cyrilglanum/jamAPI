@@ -2,12 +2,13 @@
 
 namespace App\Http\Interfaces;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 interface ProductInterface
 {
-    public function getProduct(string $name): Model;
+    public function getProductsSearched(string $name): LengthAwarePaginator;
 
     public function getAllProducts(): LengthAwarePaginator;
 

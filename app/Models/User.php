@@ -47,7 +47,7 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        if(str_contains($this->email,"admeein")){
+        if(str_contains($this->email,"admin")){
             return true;
         }
 

@@ -18,10 +18,10 @@ class ProductCriterionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function searchProduct(string $name): JsonResponse|ProductResource
+    public function searchProduct(string $name): JsonResponse|AnonymousResourceCollection
     {
         try{
-            return ProductResource::make($this->productInterface->getProduct($name));
+            return ProductResource::collection($this->productInterface->getProductsSearched($name));
         } catch (Exception $e) {
             report($e);
             return response()->json([], 503);

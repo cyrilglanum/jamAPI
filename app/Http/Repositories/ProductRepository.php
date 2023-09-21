@@ -4,6 +4,7 @@ namespace App\Http\Repositories;
 
 use App\Http\Interfaces\ProductInterface;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -17,24 +18,30 @@ class ProductRepository implements ProductInterface
             ->paginate(10);
     }
 
-    public function getProduct(string $name): Model
+    public function getProductsSearched(string $name): LengthAwarePaginator
     {
+        if ($name === "") {
+            return Product::query()
+                ->with('categories')
+                ->paginate(10);
+        }
+
         return Product::query()
             ->with('categories')
-            ->where('name', $name)
-            ->first();
+            ->where('name', "LIKE", '%' . $name . '%')
+            ->paginate(10);
     }
 
     public function getProductsByCriterion(string $name, array $price, array $type, string $orderBy): LengthAwarePaginator
     {
-        if (!empty($price)) {
-            $priceMin = $price[0];
-            $priceMax = $price[1];
+        if (!empty($price) && (int)$price[0] != false) {
+            $priceMin = (int)$price[0];
+            $priceMax = (int)$price[1];
         }
 
         $tabType = [];
 
-        if (!empty($type)) {
+        if (!empty($type)&& (int)$type[0] != false) {
             foreach ($type as $key => $item) {
                 $tabType[] = $item;
             }
@@ -42,17 +49,28 @@ class ProductRepository implements ProductInterface
 
         $query = Product::query()->with('categories');
 
-        if (isset($name) && (int)$name && !is_null($name)) {
-            $query = $query->where('name', $name);
+        if (isset($name) && $name !== "" && $name !== "false") {
+            $query = $query->where('name', "LIKE", '%' . $name . '%');
         }
-        if (isset($priceMin) && $priceMin && !is_null($priceMin)) {
+
+        if (isset($priceMin) && $priceMin) {
             $query = $query->where('price', '>', $priceMin);
         }
-        if (isset($priceMax) && $priceMax && !is_null($priceMax)) {
+
+        if (isset($priceMax) && $priceMax) {
             $query = $query->where('price', '<', $priceMax);
         }
-        if (isset($orderBy) && (int)$orderBy && !is_null($orderBy)) {
-            $query = $query->where('name', $orderBy);
+
+        $query->get();
+
+        if ($orderBy !== "false") {
+            if(str_starts_with($orderBy, "prix")){
+                $column = 'price';
+            }else{
+                $column = 'name';
+            }
+            $direction = substr($orderBy, 4 ,4);
+            $query = $query->orderBy($column, $direction);
         }
 
         $finalTab = [];
@@ -68,7 +86,7 @@ class ProductRepository implements ProductInterface
             }
         }
 
-        if(!empty($finalTab)){
+        if (!empty($finalTab)) {
             return new LengthAwarePaginator(collect($finalTab), 100, 10);
         }
 
