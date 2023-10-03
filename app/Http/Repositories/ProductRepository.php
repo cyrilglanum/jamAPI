@@ -41,9 +41,10 @@ class ProductRepository implements ProductInterface
 
         $tabType = [];
 
-        if (!empty($type)&& (int)$type[0] != false) {
+        if (!empty($type)) {
             foreach ($type as $key => $item) {
-                $tabType[] = $item;
+                if($item === "on")
+                $tabType[] = $key + 1;
             }
         }
 
@@ -76,7 +77,7 @@ class ProductRepository implements ProductInterface
         $finalTab = [];
 
         //Récupération des produits s'ils sont du type coché.
-        if (isset($tabType) && $tabType && !empty($tabType)) {
+        if (!empty($tabType)) {
             foreach ($query->get() as $product) {
                 foreach ($product->categories as $category) {
                     if (in_array($category->id, $tabType)) {
