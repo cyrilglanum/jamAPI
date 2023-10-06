@@ -45,7 +45,8 @@ Route::prefix('v1')->group(function(){
     Route::apiResource('/products', ProductController::class);
     Route::get('/products/name/{name}', [ProductCriterionController::class, 'searchProduct']);
     Route::get('/products/criterion/{name}/{price}/{type}/{orderBy}', [ProductCriterionController::class, 'ProductsByCriterion']);
-    Route::get('/cart/{user_id}', [CartController::class, 'show']);
+    Route::get('/cart/{cart_id}', [CartController::class, 'show']);
+    Route::get('/carts', [CartController::class, 'index']);
 
 });
 
